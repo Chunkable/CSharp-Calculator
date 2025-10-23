@@ -7,47 +7,120 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello there! Welcome to this calculator app.");
-            Console.WriteLine("Please enter the first number:");
-            decimal firstNumber = Convert.ToDecimal(Console.ReadLine());
-            Console.WriteLine("Please enter the second number:");
-            decimal secondNumber = Convert.ToDecimal(Console.ReadLine());
-            Console.WriteLine("Please enter the operator to use (+, -, *, /)");
-            char operatorEquation = Convert.ToChar(Console.ReadLine());
+            //Declaring variables
 
-            decimal result;
-            if (operatorEquation == '+')
+            //Calculation Variables
+            decimal num01;
+            decimal num02;
+            string? input01;
+            string? input02;
+            string? opvalue;
+            decimal result = 0;
+            
+            //Program Variables to prevent fail(except for inputredo)
+            string err = "";
+            bool fail = false;
+            bool redo = false;
+            string[] optypes = { "+", "-", "*", "/" };
+            string? inputredo;
+            
+            //Restarts Program
+            do
             {
-                result = firstNumber + secondNumber;
-                Console.WriteLine($"The equation {firstNumber} + {secondNumber} = {result}");
-            }
-            if (operatorEquation == '-')
-            {
-                result = firstNumber - secondNumber;
-                Console.WriteLine($"The equation {firstNumber} - {secondNumber} = {result}");
-               
-                }
-                 if (operatorEquation == '*')
+                //Getting user input -  TryParse is to check if something that was not a number was entered
+                Console.WriteLine("Welcome to the calculator!");
+            
+                Console.Write("Please input the first number: ");
+                input01 = Console.ReadLine();
+                if (!decimal.TryParse(input01, out num01))
                 {
-                    result = firstNumber * secondNumber;
-                    Console.WriteLine($"The equation {firstNumber} * {secondNumber} = {result}");
+                    err = "Something that was not a number was entered.";
+                    fail = true;
                 }
-                    if (operatorEquation == '/')
+            
+                Console.Write("Please input the operator(+,-,*,/): ");
+                opvalue = Console.ReadLine();
+                if (!optypes.Contains(opvalue))
+                {
+                    err = "You did not type an operator";
+                    fail = true;
+                }
+            
+                Console.Write("Please input the second number: ");
+                input02 = Console.ReadLine();
+                if (!decimal.TryParse(input02, out num02))
+                {
+                    err = "Something that was not a number was entered.";
+                    fail = true;
+                }
+            
+                //Skips over if an error has occurred
+                if (fail == false)
+                {
+                    //Switch instead of multiple if statement
+                    switch (opvalue)
                     {
-                        if (secondNumber == 0)
-                        {
-                            Console.WriteLine("You can't divide by zero! You're going to break the laws of mathematics!");
-                            
-                        }
-                        else
-                        {
-                            result = firstNumber / secondNumber;
-                            Console.WriteLine($"The equation {firstNumber} / {secondNumber} = {result}");
-                        }
-
-                        Console.ReadKey();
+                        case "+":
+                            result = num01 + num02;
+                            break;
+            
+                        case "-":
+                            result = num01 - num02;
+                            break;
+            
+                        case "*":
+                            result = num01 * num02;
+                            break;
+            
+                        case "/":
+                            if (num02 == 0)
+                            {
+                                err = "A number was divided by 0";
+                                fail = true;
+                            }
+                            else
+                            {
+                                result = num01 / num02;
+                            }
+                            break;
                     }
-                    Console.WriteLine("Thank you for using this calculator app. Goodbye!");
+                    Console.WriteLine($"\nThe equation {num01} {opvalue} {num02} = {result}.");
+                }
+            
+            
+                //If there is an error in the code
+                do
+                {
+                    if (fail == true)
+                    {
+                        Console.WriteLine($"\nAn error has been detected.\nReason: {err}");
+                    }
+            
+                    Console.Write("Would you like to restart the program? (Y/N): ");
+                    inputredo = Console.ReadLine();
+                    switch (inputredo)
+                    {
+                        case "Y":
+                            redo = true;
+                            fail = false;
+                            break;
+            
+                        case "N":
+                            redo = false;
+                            fail = false;
+                            break;
+            
+                        default:
+                            err = "You did not specify if you wanted to end or restart the program";
+                            fail = true;
+                            break;
+                    }
+                } while (fail == true);
+            } while (redo == true);
+            
+            //Wait before closing
+            Console.WriteLine("Program is now closing. Press any key to close the program.");
+            Console.ReadKey();
             }
         }
     }
